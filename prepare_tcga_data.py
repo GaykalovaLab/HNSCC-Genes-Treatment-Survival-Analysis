@@ -9,6 +9,8 @@ if __name__ == '__main__':
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-input_patient_csv", help="Clinical patient data", type=str, required=True)
     parser.add_argument("-input_genes_csv", help="Genetical patient data", type=str, required=True)
+    parser.add_argument("-input_pfs_csv", help="Prediction free survival patient data", type=str, default="")
+
     parser.add_argument("-input_delimiter", help="Delimiter for input file", type=str, default=",")
     parser.add_argument("-list_of_genes", help="List of genes for analysis", type=str, default="")
     parser.add_argument("--age_levels", help="Age levels for analysis", type=str, default="53.29637234770705,62.506502395619435,70.3607118412046")
@@ -141,5 +143,15 @@ if __name__ == '__main__':
     #drop rows with missing values
 
     #print(pd.unique(df_filtered['anatomic_organ_subdivision']))
+    if args.input_pfs_csv:
+        df_pfs = pd.read_csv(args.input_pfs_csv)
+        df_pfs = df_pfs[['bcr_patient_barcode','PFI.time.1','PFI.1']]
+        df_filtered = pd.merge(df_filtered,df_pfs,on='bcr_patient_barcode')
+        df_filtered.rename(columns={'PFI.time.1':'progression-free-time'},inplace=True)
+        df_filtered.rename(columns={'PFI.1': 'progression-free-time-status'}, inplace=True)
+        #replace '#N/A' with nan
+        df_filtered['progression-free-time'] = df_filtered['progression-free-time'].replace('#N/A',np.nan)
+        df_filtered['progression-free-time-status'] = df_filtered['progression-free-time-status'].replace('#N/A',np.nan)
+
     df_filtered.rename(columns={'bcr_patient_barcode':'patient_id'},inplace=True)
     df_filtered.to_csv(args.output_csv, index=False)
