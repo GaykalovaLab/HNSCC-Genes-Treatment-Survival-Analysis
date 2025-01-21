@@ -4,6 +4,10 @@ This repository conatins set of scripts for data preparation, exploratory
 data analysis and survival analysis of head and neck cancer patients. 
 
 ### Installation
+0. Pre-requisites
+    - Python 3.8+
+    - Git
+    - Pip
 
 1. Clone repository to your local machine
     ```
@@ -28,7 +32,7 @@ data analysis and survival analysis of head and neck cancer patients.
     
 ### Processing graph
 
-<img src="img/processing_graph_12_05_2024.png" width="1200">
+<img src="img/processing_graph_12_05_2024.drawio.png" width="1200">
 
    
 ### Content
