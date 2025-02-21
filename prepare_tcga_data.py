@@ -85,10 +85,7 @@ if __name__ == '__main__':
     df_filtered['lvi'] = df_filtered['lymphovascular_invasion'].apply(lambda x:apply_group_rename(x,vi_dict))
     df_filtered['pni'] = df_filtered['perineural_invasion'].apply(lambda x:apply_group_rename(x,vi_dict))
     df_filtered['smoking'] = df_filtered['tobacco_smoking_history_indicator'].apply(lambda x:1 if x == 'smoker' else 0)
-    df_filtered['alcohol'] = df_filtered['alcohol_consumption_frequency'].apply(lambda x:1 if x > 0 else 0)
-    for index,row in df_filtered.iterrows():
-        if row['alcohol_history_documented'] == 'NO':
-            df_filtered.loc[index,'alcohol'] = np.nan
+    df_filtered['alcohol'] = df_filtered['alcohol_history_documented'].apply(lambda x: 1 if x == 'YES' else (0 if x == 'NO' else np.nan))
     df_filtered['age'] = df_filtered['birth_days_to'].apply(lambda x: np.abs(x)/365.25)
     if args.age_levels:
         age_levels = sorted(args.age_levels.split(','),reverse=False)
